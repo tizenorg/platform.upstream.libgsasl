@@ -1,27 +1,27 @@
-Name: libgsasl
-Summary: Library for perfoming SASL authentication
-Version: 1.8.0
-Release: 1
-Group: Security/Accounts
-License: LGPL-2.1+
-Source: %{name}-%{version}.tar.gz
-Source1: %{name}.manifest
-URL: http://www.gnu.org/software/gsasl/
-Requires(post): /sbin/ldconfig
-Requires(postun): /sbin/ldconfig
-BuildRequires: libgcrypt-devel
+Name:       libgsasl
+Summary:    Library for perfoming SASL authentication
+Version:    1.8.0
+Release:    0
+Group:      Security/Accounts
+License:    LGPL-2.1+
+Source:     %{name}-%{version}.tar.gz
+Source1:    %{name}.manifest
+URL:        http://www.gnu.org/software/gsasl/
+Requires(post):     /sbin/ldconfig
+Requires(postun):   /sbin/ldconfig
+BuildRequires:      libgcrypt-devel
 
 %description
-%{summary}.
+%{name} is a library to perfom SASL authentication.
 
 
 %package devel
-Summary: Development files for %{name}
+Summary: Devel package for %{name}
 Group: SDK/Libraries
 Requires: %{name} = %{version}-%{release}
 
 %description devel
-%{summary}.
+Development files for %{name}.
 
 
 %prep
@@ -31,26 +31,27 @@ cp %{SOURCE1} .
 
 %build
 %configure --with-libgcrypt
-make %{?_smp_mflags}
+%__make %{?_smp_mflags}
 
 
 %install
 rm -rf %{buildroot}
 %make_install
 
+%find_lang %{name}
+
 
 %post -p /sbin/ldconfig
-
 
 %postun -p /sbin/ldconfig
 
 
-%files
+%files -f %{name}.lang
+%license COPYING COPYING.LIB
 %defattr(-,root,root,-)
 %manifest %{name}.manifest
-%doc AUTHORS COPYING COPYING.LIB INSTALL NEWS README THANKS
+%doc AUTHORS NEWS README THANKS
 %{_libdir}/%{name}.so.*
-%{_datadir}/locale/*/LC_MESSAGES/libgsasl.mo
 
 
 %files devel
@@ -59,4 +60,3 @@ rm -rf %{buildroot}
 %{_includedir}/gsasl*.h
 %{_libdir}/%{name}.so
 %{_libdir}/pkgconfig/%{name}.pc
-
